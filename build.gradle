@@ -1,10 +1,8 @@
 buildscript {
-
-    ext.compileSdk_version = 28
-    ext.minSdk_version = 15
-    ext.targetSdk_version = 28
-
     ext.kotlin_version = '1.3.31'
+    ext.compileSdk_version = 28
+    ext.minSdk_version = 17
+    ext.targetSdk_version = 28
 
     repositories {
         google()
@@ -20,6 +18,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 
