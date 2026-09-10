@@ -47,8 +47,10 @@ afterEvaluate {
                 artifactId = library_artifactId
                 version = library_versionName
 
-                // Explicitly reference the built AAR artifact
-                artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+                // Explicitly reference the built AAR artifact and bind it to the bundleRelease task
+                artifact("$buildDir/outputs/aar/${project.getName()}-release.aar") {
+                    builtBy tasks.getByName("bundleRelease")
+                }
 
                 // Generate POM file dependencies so consumers get implementation libraries
                 pom.withXml {
@@ -65,9 +67,4 @@ afterEvaluate {
             }
         }
     }
-}
-
-// Ensure bundleReleaseAar builds the AAR before publishToMavenLocal runs
-tasks.matching { it.name.startsWith('publish') }.all {
-    dependsOn tasks.named("bundleReleaseAar")
 }
