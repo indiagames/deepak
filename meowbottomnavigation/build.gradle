@@ -38,7 +38,7 @@ dependencies {
     implementation "androidx.core:core-ktx:1.0.1"
 }
 
-// Published artifact configuration for older AGP versions (AGP < 3.6.0)
+// Publish configuration compatible with AGP 3.4.x
 afterEvaluate {
     publishing {
         publications {
@@ -47,10 +47,10 @@ afterEvaluate {
                 artifactId = library_artifactId
                 version = library_versionName
 
-                // Explicitly attach the generated AAR file
+                // Explicitly reference the built AAR artifact
                 artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
 
-                // Generate pom.xml dependencies automatically so transitive dependencies are preserved
+                // Generate POM file dependencies so consumers get implementation libraries
                 pom.withXml {
                     def dependenciesNode = asNode().appendNode('dependencies')
                     configurations.implementation.allDependencies.each { dependency ->
@@ -67,7 +67,7 @@ afterEvaluate {
     }
 }
 
-// Ensures the AAR is built before publishing task runs
+// Ensure bundleReleaseAar builds the AAR before publishToMavenLocal runs
 tasks.matching { it.name.startsWith('publish') }.all {
     dependsOn tasks.named("bundleReleaseAar")
 }
