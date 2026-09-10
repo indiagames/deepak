@@ -1,5 +1,6 @@
 # Meow Bottom Navigation
 A simple & curved & material bottom navigation for Android written in kotlin
+[![](https://jitpack.io/v/indiagames/deepak.svg)](https://jitpack.io/#indiagames/deepak)
 
 ![](https://github.com/shetmobile/MeowBottomNavigation/raw/master/resources/meow-bottom-navigation-normal.gif)
 
