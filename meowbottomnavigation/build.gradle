@@ -38,7 +38,7 @@ dependencies {
     implementation "androidx.core:core-ktx:1.0.1"
 }
 
-// Publishing setup for AGP 3.4.1
+// Publish configuration for JitPack / Maven
 afterEvaluate {
     publishing {
         publications {
@@ -47,9 +47,10 @@ afterEvaluate {
                 artifactId = library_artifactId
                 version = library_versionName
 
-                // Direct artifact path without triggering premature task lookup
+                // Attach built AAR artifact
                 artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
 
+                // Pass implementation dependencies to generated POM
                 pom.withXml {
                     def dependenciesNode = asNode().appendNode('dependencies')
                     configurations.implementation.allDependencies.each { dependency ->
@@ -66,7 +67,7 @@ afterEvaluate {
     }
 }
 
-// Ensure the build task runs before publishing
+// Ensure assemble task runs before publishing
 tasks.whenTaskAdded { task ->
     if (task.name.startsWith('publish')) {
         task.dependsOn tasks.matching { it.name == 'assembleRelease' }
