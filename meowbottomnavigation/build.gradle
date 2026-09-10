@@ -38,7 +38,7 @@ dependencies {
     implementation "androidx.core:core-ktx:1.0.1"
 }
 
-// Publish configuration compatible with AGP 3.4.x
+// Publishing setup for AGP 3.4.1
 afterEvaluate {
     publishing {
         publications {
@@ -47,12 +47,9 @@ afterEvaluate {
                 artifactId = library_artifactId
                 version = library_versionName
 
-                // Explicitly reference the built AAR artifact and bind it to the bundleRelease task
-                artifact("$buildDir/outputs/aar/${project.getName()}-release.aar") {
-                    builtBy tasks.getByName("bundleRelease")
-                }
+                // Direct artifact path without triggering premature task lookup
+                artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
 
-                // Generate POM file dependencies so consumers get implementation libraries
                 pom.withXml {
                     def dependenciesNode = asNode().appendNode('dependencies')
                     configurations.implementation.allDependencies.each { dependency ->
@@ -66,5 +63,12 @@ afterEvaluate {
                 }
             }
         }
+    }
+}
+
+// Ensure the build task runs before publishing
+tasks.whenTaskAdded { task ->
+    if (task.name.startsWith('publish')) {
+        task.dependsOn tasks.matching { it.name == 'assembleRelease' }
     }
 }
